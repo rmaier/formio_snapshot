@@ -15,7 +15,7 @@
 CSV file with following information: 
 
 ```
-fname: input.csv
+fname: input.csv with header line
 
 Project Name; Form Name; URL dev
 ```
@@ -24,9 +24,7 @@ example:
 
 ```
 Project Name; Form Name; URL dev
-Umgang mit Tiernebenprodukten; Beseitigungspflicht Ausnahmegenehmigung; https://backend-govforms.service.wirtschaft.nrw/dev-qxixbggyuynfgel/umgangmittiernebenproduktenbeseitigungspflichtausnahmegenehmigung
-
-... tbc
+Umgang mit XXX; Beseitigungspflicht Formular; https://backend-govforms.service.wirtschaft.nrw/dev-xxx
 ```
 
 questions: 
@@ -37,37 +35,11 @@ questions:
 
 ### main
 
-### read
+### read_csv
 
-[easy http read](https://requests.readthedocs.io/en/latest/):
+### get_json
 
-```python
-import requests
-
-r = requests.get('https://backend-govforms.service.wirtschaft.nrw/dev-qxixbggyuynfgel/umgangmittiernebenproduktenbeseitigungspflichtausnahmegenehmigung') #, auth=('user', 'pass'))
->>> r.status_code
-200
->>> r.headers['content-type']
-'application/json; charset=utf8'
->>> r.encoding
-'utf-8'
->>> r.text
-'{"type":"User"...'
->>> r.json()
-{'private_gists': 419, 'total_private_repos': 77, ...}
-# --> " " gets ' ' , see 
-```
-
-### write
-
-```python
-f = open("demofile2.txt", "a")
-f.write("Now the file has more content!")
-f.close()
-
-```
-
-
+### write_json
 
 ---
 
@@ -90,14 +62,5 @@ year = now.strftime("%Y")
 print("year:", year)
 ```
 
-```python
-# call
-a = 2
-b = 3
-testfun_res = tesfun(a, b)
 
-def testfun(a,b): 
-    c=a*b
-    return c
-```
 
