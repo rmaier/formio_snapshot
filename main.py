@@ -3,8 +3,9 @@
 #import requests
 #from datetime import datetime
 
-# def inputfile name
+# def variables
 ifname = "./input.csv"
+write_dir = "./snapshot/"
 
 ## def read_csv
 def read_csv(ifname): 
@@ -18,21 +19,18 @@ def read_csv(ifname):
     import csv
     import requests
 
-    with open (ifname, newline='') as csvfile: 
-        spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
-        for row in spamreader: 
-             print(', '.join(row))
-    return row
- 
-    #proj_name = row[0]
-    #form_name = row[1]
-    #url = row[2]
-
-# call read_csv
-ifname_content = read_csv(ifname)
+    with open (ifname, newline='') as f: 
+        
+        spamreader = csv.reader(f, delimiter=';', quotechar='|')
+      
+        data = []
+        
+        for line in spamreader: 
+             data.append(line)
+    return data
 
 ## def get json
-def get_json(url = ifname_content[2]):
+def get_json(url):
     '''
     This method is supposed to get the JSON data 
     '''
@@ -41,13 +39,9 @@ def get_json(url = ifname_content[2]):
     
     return r
 
-# call get_json
-get_json_data = get_json(ifname_content[2])
-
-# call write_json
 
 ## def write_json
-def write_json(proj_name, form_name, data = get_json_data.content):
+def write_json(proj_name, form_name, write_dir, data = get_json_data.content):
     ''''
     This method is supposed to write the JSON data 
     in a file
@@ -57,14 +51,23 @@ def write_json(proj_name, form_name, data = get_json_data.content):
     now = datetime.now() # current date and time
     ofname_date = now.strftime("%Y.%m.%d_%H%M") # e.g.: '2022.08.11_1229'
 
-    open(ofname_date+"_"+proj_name+" -"+form_name+".json", "wb").write(data)
+    open(write_dir+ofname_date+"_"+proj_name+" -"+form_name+".json", "wb").write(data)
 
     now_time = now.strftime("%Y.%m.%d %H:%M")
-    print('[LOG] '+now_time+': Backup created suceccfully')
+    print('[LOG] '+now_time+': Backup created sucessfully for: '+proj_name[0:15]+'...'+form_name[0:15])
+
     
-# call write_json
-proj_name = ifname_content[0]
-form_name = ifname_content[1]
+# call read_csv
+ifname_content = read_csv(ifname)
 
-write_json(proj_name, form_name, get_json_data.content)
 
+for i in range(1,len(ifname_content)):
+    # call get_json
+    get_json_data = get_json(ifname_content[i][2])
+    #print(ifname_content[i][2])
+    
+    # call write_json
+    proj_name = ifname_content[i][0]
+    form_name = ifname_content[i][1]
+
+    write_json(proj_name, form_name, write_dir, get_json_data.content)
